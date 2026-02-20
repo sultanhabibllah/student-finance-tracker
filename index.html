@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALU Student Finance Tracker</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="logo">Finance Tracker</span>
+      <nav aria-label="Main navigation">
+        <ul class="nav-list" role="list">
+          <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
+          <li><a href="#dashboard" class="nav-link" data-section="dashboard">Dashboard</a></li>
+          <li><a href="#records" class="nav-link" data-section="records">Records</a></li>
+          <li><a href="#add" class="nav-link" data-section="add">Add</a></li>
+          <li><a href="#settings" class="nav-link" data-section="settings">Settings</a></li>
+          <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- HOME SECTION -->
+    <section id="home" class="section active" aria-labelledby="home-heading">
+
+      <!-- Hero -->
+      <div class="container">
+        <div class="hero">
+          <div class="hero-content">
+            <h1 class="hero-title" id="home-heading">ALU Student Finance Tracker</h1>
+            <p class="hero-subtitle">Track your finances and achieve your goals. Log expenses, set budgets, and get insights into your spending all in one place.</p>
+            <a href="#dashboard" class="btn btn-primary" data-section="dashboard" id="hero-cta">VIEW DASHBOARD</a>
+          </div>
+          <div class="hero-image" aria-hidden="true">
+            <img src="assets/hero.jpg" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard preview on home -->
+      <div class="container">
+        <p class="home-dashboard-label">Dashboard</p>
+
+        <div id="cap-alert" role="status" aria-live="polite" aria-atomic="true" class="cap-alert hidden"></div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><span class="stat-label">Total Records</span><span class="stat-value" id="stat-total">0</span></article>
+          <article class="stat-card"><span class="stat-label">Total Spent</span><span class="stat-value" id="stat-sum">RWF0.00</span></article>
+          <article class="stat-card"><span class="stat-label">Top Category</span><span class="stat-value" id="stat-top-cat">—</span></article>
+          <article class="stat-card"><span class="stat-label">Budget Remaining</span><span class="stat-value" id="stat-remaining">—</span></article>
+        </div>
+
+        <div class="chart-section">
+          <h2>Last 7 Days</h2>
+          <div class="bar-chart" id="bar-chart" aria-label="Spending chart for last 7 days" role="img"></div>
+        </div>
+
+        <div class="category-breakdown">
+          <h2>By Category</h2>
+          <div class="category-bars" id="category-bars"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- DASHBOARD SECTION (standalone) -->
+    <section id="dashboard" class="section" aria-labelledby="dashboard-heading">
+      <div class="container">
+        <h1 id="dashboard-heading">Dashboard</h1>
+
+        <div id="cap-alert-dash" role="status" aria-live="polite" aria-atomic="true" class="cap-alert hidden"></div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><span class="stat-label">Total Records</span><span class="stat-value" id="stat-total-dash">0</span></article>
+          <article class="stat-card"><span class="stat-label">Total Spent</span><span class="stat-value" id="stat-sum-dash">RWF0.00</span></article>
+          <article class="stat-card"><span class="stat-label">Top Category</span><span class="stat-value" id="stat-top-cat-dash">—</span></article>
+          <article class="stat-card"><span class="stat-label">Budget Remaining</span><span class="stat-value" id="stat-remaining-dash">—</span></article>
+        </div>
+
+        <div class="chart-section">
+          <h2>Last 7 Days</h2>
+          <div class="bar-chart" id="bar-chart-dash" aria-label="Spending chart for last 7 days" role="img"></div>
+        </div>
+
+        <div class="category-breakdown">
+          <h2>By Category</h2>
+          <div class="category-bars" id="category-bars-dash"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECORDS SECTION -->
+    <section id="records" class="section" aria-labelledby="records-heading">
+      <div class="container">
+        <h1 id="records-heading">Records</h1>
+
+        <div class="records-controls">
+          <div class="search-group">
+            <label for="search-input">Search (regex supported)</label>
+            <input type="text" id="search-input" placeholder="e.g. coffee|lunch or ^\d" />
+            <label class="checkbox-label">
+              <input type="checkbox" id="search-case" /> Case sensitive
+            </label>
+            <span id="search-error" class="field-error" role="alert" aria-live="assertive"></span>
+          </div>
+          <div class="sort-group">
+            <label for="sort-select">Sort by</label>
+            <select id="sort-select">
+              <option value="date-desc">Date (newest)</option>
+              <option value="date-asc">Date (oldest)</option>
+              <option value="desc-asc">Description A→Z</option>
+              <option value="desc-desc">Description Z→A</option>
+              <option value="amount-asc">Amount (low→high)</option>
+              <option value="amount-desc">Amount (high→low)</option>
+            </select>
+          </div>
+          <div class="import-export-group">
+            <button id="export-btn" class="btn btn-secondary">Export JSON</button>
+            <label class="btn btn-secondary" for="import-input">
+              Import JSON
+              <input type="file" id="import-input" accept=".json" class="sr-only" />
+            </label>
+          </div>
+        </div>
+
+        <div id="records-status" role="status" aria-live="polite" class="sr-only"></div>
+
+        <div class="table-wrapper">
+          <table id="records-table" aria-label="Financial records">
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Category</th>
+                <th scope="col">Date</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="records-body"></tbody>
+          </table>
+          <p id="empty-state" class="empty-state hidden">No records yet. Add one to get started!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADD SECTION -->
+    <section id="add" class="section" aria-labelledby="add-heading">
+      <div class="container">
+        <h1 id="add-heading">Add Record</h1>
+        <form id="record-form" novalidate aria-label="Add or edit a financial record">
+          <input type="hidden" id="edit-id" />
+          <div class="form-group">
+            <label for="field-description">Description <span aria-hidden="true">*</span></label>
+            <input type="text" id="field-description" required placeholder="e.g. Lunch at cafeteria" aria-describedby="desc-error desc-hint" />
+            <span id="desc-hint" class="field-hint">No leading/trailing spaces; no double spaces.</span>
+            <span id="desc-error" class="field-error" role="alert" aria-live="assertive"></span>
+          </div>
+          <div class="form-group">
+            <label for="field-amount">Amount (RWF) <span aria-hidden="true">*</span></label>
+            <input type="text" id="field-amount" required placeholder="e.g. 5000" aria-describedby="amount-error" />
+            <span id="amount-error" class="field-error" role="alert" aria-live="assertive"></span>
+          </div>
+          <div class="form-group">
+            <label for="field-category">Category <span aria-hidden="true">*</span></label>
+            <select id="field-category" required aria-describedby="category-error">
+              <option value="">Select a category</option>
+              <option value="Food">Food</option>
+              <option value="Books">Books</option>
+              <option value="Transport">Transport</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Fees">Fees</option>
+              <option value="Other">Other</option>
+            </select>
+            <span id="category-error" class="field-error" role="alert" aria-live="assertive"></span>
+          </div>
+          <div class="form-group">
+            <label for="field-date">Date <span aria-hidden="true">*</span></label>
+            <input type="text" id="field-date" required placeholder="YYYY-MM-DD" aria-describedby="date-error date-hint" />
+            <span id="date-hint" class="field-hint">Format: YYYY-MM-DD</span>
+            <span id="date-error" class="field-error" role="alert" aria-live="assertive"></span>
+          </div>
+          <div id="form-status" role="status" aria-live="polite" class="form-status"></div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submit-btn">Add Record</button>
+            <button type="button" class="btn btn-ghost" id="cancel-edit-btn" hidden>Cancel Edit</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- SETTINGS SECTION -->
+    <section id="settings" class="section" aria-labelledby="settings-heading">
+      <div class="container">
+        <h1 id="settings-heading">Settings</h1>
+        <form id="settings-form" novalidate>
+          <fieldset>
+            <legend>Budget Cap</legend>
+            <div class="form-group">
+              <label for="budget-cap">Monthly budget cap (RWF)</label>
+              <input type="text" id="budget-cap" placeholder="e.g. 500000" aria-describedby="cap-error" />
+              <span id="cap-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Currency Rates (relative to RWF)</legend>
+            <div class="form-group">
+              <label for="rate-usd">USD rate (1 RWF = ? USD)</label>
+              <input type="text" id="rate-usd" placeholder="e.g. 0.00073" />
+            </div>
+            <div class="form-group">
+              <label for="rate-eur">EUR rate (1 RWF = ? EUR)</label>
+              <input type="text" id="rate-eur" placeholder="e.g. 0.00067" />
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Categories</legend>
+            <div class="form-group">
+              <label for="custom-category">Add custom category</label>
+              <div class="inline-group">
+                <input type="text" id="custom-category" placeholder="e.g. Health" aria-describedby="custom-cat-error" />
+                <button type="button" class="btn btn-secondary" id="add-category-btn">Add</button>
+              </div>
+              <span id="custom-cat-error" class="field-error" role="alert" aria-live="assertive"></span>
+            </div>
+            <ul id="category-list" class="category-list" role="list" aria-label="Custom categories"></ul>
+          </fieldset>
+          <div id="settings-status" role="status" aria-live="polite" class="form-status"></div>
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+        </form>
+
+        <div class="conversion-tool">
+          <h2>Currency Converter</h2>
+          <div class="form-group">
+            <label for="convert-amount">Amount (RWF)</label>
+            <input type="text" id="convert-amount" placeholder="e.g. 50000" />
+          </div>
+          <div id="conversion-result" class="conversion-result" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="section" aria-labelledby="about-heading">
+      <div class="container">
+        <h1 id="about-heading">About</h1>
+        <div class="about-content">
+          <p><strong>ALU Student Finance Tracker</strong> helps you log, search, and analyse your spending as a student at ALU.</p>
+          <h2>Features</h2>
+          <ul>
+            <li>Add, edit, and delete spending records</li>
+            <li>Live regex-powered search with match highlighting</li>
+            <li>Dashboard with 7-day trend chart</li>
+            <li>Budget cap with live overage alerts</li>
+            <li>JSON import/export with validation</li>
+            <li>Currency conversion (RWF → USD / EUR)</li>
+            <li>Fully keyboard navigable and screen-reader friendly</li>
+          </ul>
+          <h2>Contact</h2>
+          <ul class="contact-list">
+            <li><a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="mailto:your@email.com">your@email.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 ALU Student Finance Tracker. Built with vanilla HTML, CSS &amp; JS.</p>
+    </div>
+  </footer>
+
+  <div id="confirm-dialog" class="dialog-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <div class="dialog">
+      <h2 id="dialog-title">Delete Record?</h2>
+      <p>Are you sure? This cannot be undone.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-danger" id="confirm-yes">Delete</button>
+        <button class="btn btn-ghost" id="confirm-no">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>
