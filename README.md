@@ -1,12 +1,18 @@
-# Student Finance Tracker
+# ALU Student Finance Tracker
 
-A fully accessible, responsive, vanilla HTML/CSS/JS web app for tracking ALU student expenses.
+A fully accessible, responsive, web app for tracking student expenses that ALU student can use built with vanilla HTML/CSS/JS
 
-**Live Demo:** 
+**Live Demo:** [https://sultanhabibllah.github.io/student-finance-tracker](https://sultanhabibllah.github.io/student-finance-tracker)
+
+**Demo Video:** [Coming soon]
 
 
 ## Theme
 **Student Finance Tracker** — log, search, and analyse spending with categories, budget caps, and currency conversion.
+
+
+## UI Design
+The interface was designed from scratch with custom wireframes before development began. I worked on the wireframes inside of Affinity Studio. The design follows a bold, minimal aesthetic with a yellow brand colour, black typography, and clean card layouts. Built mobile-first across three breakpoints.
 
 
 ## Features
@@ -16,17 +22,16 @@ A fully accessible, responsive, vanilla HTML/CSS/JS web app for tracking ALU stu
 - Dashboard with total stats, top category, 7-day bar chart, and category breakdown
 - Monthly budget cap with ARIA live region alerts (polite/assertive)
 - JSON import & export with validation
-- Currency conversion: GBP → USD / EUR (manual rates in Settings)
+- Currency conversion: RWF → USD / EUR (manual rates in Settings)
 - Custom categories (add/remove)
 - Mobile-first responsive design (360px, 768px, 1024px breakpoints)
 - Full keyboard navigation and ARIA accessibility
 - LocalStorage persistence across sessions
 
 
-
 ## How to Run
 ```bash
-git clone 
+git clone https://github.com/sultanhabibllah/student-finance-tracker.git
 cd student-finance-tracker
 # Open index.html with Live Server in VS Code
 # Important: must use a server, not file:// directly
@@ -43,11 +48,11 @@ To run tests: open `tests.html` via Live Server
 |---|---|---|
 | `/^\S(?:.*\S)?$/` | No leading/trailing spaces | `"Lunch"` ✓, `" Lunch"` ✗ |
 | `/  +/` | No double spaces | `"Lunch  at"` ✗ |
-| `/^(0\|[1-9]\d*)(\.\d{1,2})?$/` | Valid amount | `12.50` ✓, `12.505` ✗ |
+| `/^(0\|[1-9]\d*)(\.\d{1,2})?$/` | Valid amount | `5000` ✓, `12.505` ✗ |
 | `/^\d{4}-(0[1-9]\|1[0-2])-(0[1-9]\|[12]\d\|3[01])$/` | Date YYYY-MM-DD | `2025-09-25` ✓ |
 | `/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/` | Category name | `Out-of-pocket` ✓, `Food123` ✗ |
 | `/\b(\w+)\s+\1\b/i` | **Advanced** — duplicate words (back-reference) | `"the the"` ✗ |
-| User input | Live regex search | `coffee\|tea`, `^\d`, `\.\d{2}\b` |
+| User input | Live regex search | `coffee\|lunch`, `^\d`, `\.\d{2}\b` |
 
 
 ## Keyboard Map
@@ -80,6 +85,9 @@ student-finance-tracker/
 ├── tests.html
 ├── seed.json
 ├── README.md
+├── assets/
+│   ├── hero.jpg
+│   └── wireframes/
 ├── styles/
 │   └── main.css
 └── scripts/
@@ -93,4 +101,9 @@ student-finance-tracker/
 
 
 ## Individual Work Confirmation
-This repository is solelyy authored by Habibllah Ayodele
+This repository is solely authoredd by Habibllah Ayodele
+
+
+## Contact
+- GitHub: [sultanhabibllah](https://github.com/sultanhabibllah)
+- Email: h.ayodele@alustudent.com
