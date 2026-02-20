@@ -7,6 +7,8 @@ import {
   validateBudgetCap, validateCurrencyRate
 } from './validators.js';
 
+let currentRegex = null;
+
 // ===== BOOT =====
 State.init();
 UI.initNav(onNavigate);
@@ -24,13 +26,11 @@ function onNavigate(section) {
 function refreshDashboard() {
   const records = State.getRecords();
   const settings = State.getSettings();
-  UI.renderDashboard(records, settings, '');        // home section
-  UI.renderDashboard(records, settings, '-dash');   // dashboard section
+  UI.renderDashboard(records, settings, '');
+  UI.renderDashboard(records, settings, '-dash');
 }
 
 // ===== RECORDS =====
-let currentRegex = null;
-
 function refreshRecords() {
   const sortKey = document.getElementById('sort-select').value;
   let recs = State.sortRecords(State.getRecords(), sortKey);
