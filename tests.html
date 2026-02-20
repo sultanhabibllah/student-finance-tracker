@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tests – Student Finance Tracker</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 1.5rem; }
+    .test { padding: 0.6rem 1rem; margin-bottom: 0.5rem; border-radius: 6px; font-size: 0.9rem; }
+    .pass { background: #dcfce7; color: #166534; border-left: 4px solid #16a34a; }
+    .fail { background: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626; }
+    .summary { font-weight: 700; font-size: 1.1rem; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Regex & Validator Tests</h1>
+  <div id="results"></div>
+  <p class="summary" id="summary"></p>
+
+  <script type="module">
+    import {
+      validateDescription, validateAmount, validateDate,
+      validateCategory, validateCustomCategory, RE_DUPLICATE_WORD
+    } from './scripts/validators.js';
+    import { compileRegex, highlight, filterRecords } from './scripts/search.js';
+
+    const results = [];
+
+    function assert(label, condition) {
+      results.push({ label, pass: !!condition });
+    }
+
+    // DESCRIPTION
+    assert('Valid description passes', validateDescription('Lunch at cafeteria') === null);
+    assert('Leading space fails', validateDescription(' Lunch') !== null);
+    assert('Trailing space fails', validateDescription('Lunch ') !== null);
+    assert('Double space fails', validateDescription('Lunch  at cafeteria') !== null);
+    assert('Empty description fails', validateDescription('') !== null);
+    assert('Single char fails', validateDescription('a') !== null);
+
+    // AMOUNT
+    assert('Valid integer amount passes', validateAmount('50') === null);
+    assert('Valid decimal amount passes', validateAmount('12.50') === null);
+    assert('Zero amount fails', validateAmount('0') !== null);
+    assert('Negative amount fails', validateAmount('-5') !== null);
+    assert('Three decimal places fails', validateAmount('12.505') !== null);
+    assert('Letter in amount fails', validateAmount('12a') !== null);
+    assert('Empty amount fails', validateAmount('') !== null);
+
+    // DATE
+    assert('Valid date passes', validateDate('2025-09-25') === null);
+    assert('Invalid month fails', validateDate('2025-13-01') !== null);
+    assert('Invalid day fails', validateDate('2025-01-32') !== null);
+    assert('Wrong format fails', validateDate('25/09/2025') !== null);
+    assert('Empty date fails', validateDate('') !== null);
+
+    // CATEGORY
+    assert('Valid category passes', validateCategory('Food') === null);
+    assert('Empty category fails', validateCategory('') !== null);
+
+    // CUSTOM CATEGORY
+    assert('Valid custom category passes', validateCustomCategory('Health') === null);
+    assert('Number in category fails', validateCustomCategory('Health123') !== null);
+    assert('Hyphenated category passes', validateCustomCategory('Out-of-pocket') === null);
+    assert('Empty custom category fails', validateCustomCategory('') !== null);
+
+    // ADVANCED: duplicate word back-reference
+    assert('Duplicate word "the the" detected', RE_DUPLICATE_WORD.test('the the'));
+    assert('Duplicate word "coffee coffee" detected', RE_DUPLICATE_WORD.test('coffee coffee'));
+    assert('No false positive: "the coffee"', !RE_DUPLICATE_WORD.test('the coffee'));
+
+    // SAFE REGEX COMPILER
+    assert('Valid regex compiles', compileRegex('coffee') instanceof RegExp);
+    assert('Invalid regex returns invalid', compileRegex('[invalid') === 'invalid');
+    assert('Empty string returns null', compileRegex('') === null);
+    assert('Case-insensitive by default', compileRegex('COFFEE').test('coffee'));
+    assert('Case-sensitive option works', !compileRegex('COFFEE', true).test('coffee'));
+
+    // HIGHLIGHT
+    const re = compileRegex('coffee');
+    assert('Highlight wraps match in mark tag', highlight('Grab coffee now', re).includes('<mark>coffee</mark>'));
+    assert('Highlight escapes HTML', highlight('<script>', null) === '&lt;script&gt;');
+
+    // FILTER
+    const records = [
+      { id: 'r1', description: 'Coffee at cafe', category: 'Food', amount: 5, date: '2025-09-01', createdAt: '', updatedAt: '' },
+      { id: 'r2', description: 'Bus pass', category: 'Transport', amount: 20, date: '2025-09-02', createdAt: '', updatedAt: '' }
+    ];
+    const coffeeRe = compileRegex('coffee');
+    const filtered = filterRecords(records, coffeeRe);
+    assert('Filter returns matching record', filtered.length === 1 && filtered[0].id === 'r1');
+    assert('Filter returns all with null regex', filterRecords(records, null).length === 2);
+
+    // RENDER RESULTS
+    const container = document.getElementById('results');
+    results.forEach(r => {
+      const div = document.createElement('div');
+      div.className = `test ${r.pass ? 'pass' : 'fail'}`;
+      div.textContent = `${r.pass ? '✓' : '✗'} ${r.label}`;
+      container.appendChild(div);
+    });
+
+    const passed = results.filter(r => r.pass).length;
+    const total = results.length;
+    const summary = document.getElementById('summary');
+    summary.textContent = `${passed} / ${total} tests passed.`;
+    summary.style.color = passed === total ? '#16a34a' : '#dc2626';
+  </script>
+</body>
+</html>
